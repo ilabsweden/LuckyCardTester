@@ -23,7 +23,12 @@ public class LCTest {
 	}
 
 	public static void main(String[] args) {
-		LCTest t = new LCTest("../OOP2022_bile_assignment1");
+		if (args.length<1) {
+			System.out.println("LCTest is a test utility for the LuckyCard assignmet (IT401G).\n\nUsage: java LCTest.java <path to your project folder. Use '.' to indicate the current folder>");
+			return;
+		}
+		String path = args[0];
+		LCTest t = new LCTest(path);
 
 //		Map<String, String> env = System.getenv();
 //		for (String envName : env.keySet()) {
