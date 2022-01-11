@@ -5,9 +5,13 @@ SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
 # LuckyCardTester
-Simple application tester for the LuckyCard assignment. 
+Application tester for the LuckyCard assignment (IT401G, University of Skövde).
+
+This utility allow you to check your solution to this assignment before you submit. This tool is intended to help you verify that your solution meets some basic requirements, but it does not check _all_ requirements and this it should not be read as a guarantee for a pass.
 
 ## Usage: 
+This utility has a text based interface meant to be used in a terminal. LuckyCardTester will compile and execute your project, any print the test result. 
+
 `java LCTest.java`   _Prints help message._
 
 `java LCTest.java .`   _Puns test in current folder._
