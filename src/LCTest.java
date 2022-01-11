@@ -268,14 +268,18 @@ public class LCTest {
 		if ((cards[0] < cards[2] && cards[1] > cards[2]) || (cards[0] > cards[2] && cards[1] < cards[2])) {
 			if (winMessage.trim().equals("You win!")) {
 				return 0;
+			} else {
+				System.out.println("Warning: Incorrect game result (expectded \"You win!\"), found: " + winMessage);
+				return 1;
 			}
 		} else {
 			if (winMessage.trim().equals("You louse!")) {
 				return 0;
+			} else {
+				System.out.println("Warning: Incorrect game result (expected \"You louse!\"), found: " + winMessage);
+				return 1;
 			}
 		}
-		System.out.println("Warning: Incorrect game result (\"You win!\" or \"You louse!\"), found: " + winMessage);
-		return 1;
 	}
 
 	/**
