@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 /**
  * Application tester for the LuckyCard assignment (IT401G, University of
- * Skovde).
+ * Skövde).
  * 
  * @author Erik Billing
  *
@@ -39,7 +39,7 @@ public class LCTest {
 	public static void main(String[] args) {
 		if (args.length < 1) {
 			System.out.println(
-					"LCTest is a test utility for the LuckyCard assignmet (IT401G).\n\nUsage: java LCTest.java <path to your project folder. Use '.' to indicate the current folder>");
+					"LCTest is a test utility for the LuckyCard assignment (IT401G).\n\n\tUsage: java LCTest.java <path to your project folder. Use '.' to indicate the current folder>");
 			return;
 		}
 		String path = args[0];
@@ -48,7 +48,7 @@ public class LCTest {
 		try {
 			t.testAll();
 		} catch (TestException | IOException | InterruptedException e) {
-			System.out.println("Test failed with error:");
+			System.out.println("Test failed with error: ");
 			e.printStackTrace();
 		}
 	}
@@ -67,7 +67,7 @@ public class LCTest {
 	/**
 	 * Returns a BufferedReader over stdout for specified process p.
 	 * 
-	 * @param p
+	 * @param p a Process
 	 * @return
 	 */
 	BufferedReader stdout(Process p) {
@@ -77,7 +77,7 @@ public class LCTest {
 	/**
 	 * Returns a BufferedReader over stderr for specified process p.
 	 * 
-	 * @param p
+	 * @param p a Process
 	 * @return
 	 */
 	BufferedReader stderr(Process p) {
@@ -87,7 +87,7 @@ public class LCTest {
 	/**
 	 * Writes to stdin of specified process p.
 	 * 
-	 * @param p
+	 * @param p a Process
 	 * @param message the message to be written to stdin.
 	 * @throws IOException
 	 */
@@ -118,7 +118,7 @@ public class LCTest {
 	}
 
 	/**
-	 * Prints all data of specified reader to stdout.
+	 * Prints all data from specified reader to stdout.
 	 * 
 	 * @param reader
 	 */
@@ -168,7 +168,7 @@ public class LCTest {
 		BufferedReader reader = stdout(p);
 		String line = reader.readLine();
 		if (line.startsWith("javac ")) {
-			System.out.println("Ok.");
+			System.out.println("OK.");
 			return 0;
 		} else {
 			throw new TestException("javac not found!");
@@ -210,7 +210,7 @@ public class LCTest {
 	 * Test specified outputs from a LuckyCard game.
 	 * 
 	 * @param lines     the output as a list of strings.
-	 * @param firstGame
+	 * @param firstGame 
 	 * @return number of warnings.
 	 */
 	int testOutput(List<String> lines, boolean firstGame) {
@@ -239,13 +239,13 @@ public class LCTest {
 				}
 				warnings += testWinMessage(lines, i + 4, cards);
 			} else {
-				System.out.println("Expected four lines of output from current game, found:");
+				System.out.println("Expected four lines of output from current game, Found: ");
 				for (int j = i + 1; j < lines.size(); j++)
 					System.out.println(lines.get(i));
 				warnings++;
 			}
 		} else {
-			System.out.println("Warning: Expected lines presening the current game round!");
+			System.out.println("Warning: Expected lines presenting the current game round!");
 		}
 
 		if (!lines.get(lines.size() - 1).contains("Press ENTER to play again or")) {
@@ -256,10 +256,10 @@ public class LCTest {
 	}
 
 	/**
-	 * Test the win/louse message
+	 * Test the win/lose message
 	 * @param lines output lines from the application
 	 * @param i index of current line to look for win message
-	 * @param cards the three cards that was drawn
+	 * @param cards the three cards drawn
 	 * @return number of warnings. 
 	 */
 	int testWinMessage(List<String> lines, int i, int... cards) {
@@ -269,14 +269,14 @@ public class LCTest {
 			if (winMessage.trim().equals("You win!")) {
 				return 0;
 			} else {
-				System.out.println("Warning: Incorrect game result (expectded \"You win!\"), found: " + winMessage);
+				System.out.println("Warning: Incorrect game result (expected \"You win!\"), found: " + winMessage);
 				return 1;
 			}
 		} else {
-			if (winMessage.trim().equals("You louse!")) {
+			if (winMessage.trim().equals("You lose!")) {
 				return 0;
 			} else {
-				System.out.println("Warning: Incorrect game result (expected \"You louse!\"), found: " + winMessage);
+				System.out.println("Warning: Incorrect game result (expected \"You lose!\"), found: " + winMessage);
 				return 1;
 			}
 		}
@@ -297,7 +297,7 @@ public class LCTest {
 		p.waitFor();
 		List<String> errors = readAll(stderr(p));
 		if (errors.isEmpty()) {
-			System.out.println("Ok.");
+			System.out.println("OK");
 			return 0;
 		} else {
 			throw new TestException(String.join(" ", errors));
@@ -312,7 +312,7 @@ public class LCTest {
 	int testProject() {
 		System.out.print("Testing Eclipse project... ");
 		if (new File(projectPath + "/.project").exists()) {
-			System.out.println("Ok.");
+			System.out.println("OK");
 			return 0;
 		} else {
 			System.out.println("Warning! Eclipse project definition is missing!");
@@ -329,11 +329,11 @@ public class LCTest {
 		System.out.print("Testing source... ");
 		if (new File(projectPath + "/src/Game.java").exists() && new File(projectPath + "/src/Deck.java").exists()
 				&& new File(projectPath + "/src/Card.java").exists()) {
-			System.out.println("Ok.");
+			System.out.println("OK");
 			return 0;
 		} else {
 			System.out.println(
-					"Warning! \nYour application should comprise three java files located in the src folder of your project: Card.java, Deck.java, Game.java. Some of these files could not be found!");
+					"Warning! \nYour application should consist of three java files located in the src folder of your project: Card.java, Deck.java, Game.java. Some of these files could not be found!");
 			return 1;
 		}
 	}
@@ -354,7 +354,7 @@ public class LCTest {
 		warnings += testCompile();
 		warnings += testRun();
 		if (warnings == 0) {
-			System.out.println("All tests ok.");
+			System.out.println("All tests OK.");
 		} else {
 			System.out.println("Tests completed with " + warnings + " warnings.");
 		}
@@ -364,7 +364,7 @@ public class LCTest {
 	/**
 	 * Verifies that the specified string s match the output for a card.
 	 * 
-	 * @param s
+	 * @param s String to test
 	 * @param cardIndex is the card index in the LuckyCard game (1, 2, or 3).
 	 * @return specified card value.
 	 * @throws TestException
@@ -390,7 +390,7 @@ public class LCTest {
 	/**
 	 * Calculates card value.
 	 * 
-	 * @param s
+	 * @param s String to parse
 	 * @return the total value for a card, including bonus.
 	 */
 	int cardValue(String s) {
