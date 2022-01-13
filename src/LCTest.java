@@ -256,7 +256,7 @@ public class LCTest {
 	}
 
 	/**
-	 * Test the win/louse message
+	 * Test the win/lose message
 	 * @param lines output lines from the application
 	 * @param i index of current line to look for win message
 	 * @param cards the three cards that was drawn
@@ -273,10 +273,10 @@ public class LCTest {
 				return 1;
 			}
 		} else {
-			if (winMessage.trim().equals("You louse!")) {
+			if (winMessage.trim().equals("You lose!")) {
 				return 0;
 			} else {
-				System.out.println("Warning: Incorrect game result (expected \"You louse!\"), found: " + winMessage);
+				System.out.println("Warning: Incorrect game result (expected \"You lose!\"), found: " + winMessage);
 				return 1;
 			}
 		}
