@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -293,7 +295,7 @@ public class LCTest {
 	int testCompile() throws InterruptedException, IOException, TestException {
 		System.out.print("Compiling application... ");
 
-		Process p = exec("javac", "-d", "bin", "-sourcepath", "src", "src/Game.java");
+		Process p = exec("javac", "-encoding", "UTF-8", "-d", "bin", "-sourcepath", "src", "src/Game.java");
 		p.waitFor();
 		List<String> errors = readAll(stderr(p));
 		if (errors.isEmpty()) {
@@ -373,7 +375,7 @@ public class LCTest {
 		if (!s.startsWith("Card")) {
 			throw new TestException("Warning: Expected presentation of card " + cardIndex + ", found:\n" + s);
 		}
-		String[] parts = s.split(":|->|=");
+		String[] parts = s.split(":|->|\\?|→|=");
 		if (parts.length == 4) {
 			int value = cardValue(parts[1]);
 			int specifiedValue = Integer.parseInt(parts[3].trim());
