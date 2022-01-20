@@ -179,27 +179,27 @@ public class LCTest {
 	}
 
 	/**
-	 * Tests that the project executes with expected inouts and outputs.
+	 * Tests that the project executes with expected inputs and outputs.
 	 * 
 	 * @return number of warnings.
 	 * @throws IOException
 	 * @throws InterruptedException
 	 * @throws TestException
 	 */
-	int testRun() throws IOException, InterruptedException, TestException {
+	int testRun(int gameCount) throws IOException, InterruptedException, TestException {
 		System.out.println("Running application... ");
 		int warnings = 0;
 		Process p = exec("java", "-cp", "bin", "Game");
 
-		for (int i = 0; i < 2; i++) {
+		for (int i = 1; i <= gameCount; i++) {
 			if (p.waitFor(500, TimeUnit.MILLISECONDS)) {
 				printAll(stdout(p));
 				throw new TestException("Application closed unexpectedly!");
 			}
 			List<String> lines = readAll(stdout(p));
 			printAll(lines);
-			warnings += testOutput(lines, i == 0);
-			stdin(p, i == 1 ? "q" : "\n");
+			warnings += testOutput(lines, i == 1);
+			stdin(p, i == gameCount ? "q\n" : "\n");
 		}
 
 		if (!p.waitFor(500, TimeUnit.MILLISECONDS)) {
@@ -354,7 +354,7 @@ public class LCTest {
 		warnings += testProject();
 		warnings += testSrc();
 		warnings += testCompile();
-		warnings += testRun();
+		warnings += testRun(2);
 		if (warnings == 0) {
 			System.out.println("All tests OK.");
 		} else {
