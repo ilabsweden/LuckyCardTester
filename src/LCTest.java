@@ -169,7 +169,7 @@ public class LCTest {
 		p.waitFor();
 		BufferedReader reader = stdout(p);
 		String line = reader.readLine();
-		if (line.startsWith("javac ")) {
+		if (line != null && line.startsWith("javac ")) {
 			System.out.println("OK.");
 			return 0;
 		} else {
