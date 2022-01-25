@@ -8,9 +8,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -89,7 +91,7 @@ public class LCTest {
 	/**
 	 * Writes to stdin of specified process p.
 	 * 
-	 * @param p a Process
+	 * @param p       a Process
 	 * @param message the message to be written to stdin.
 	 * @throws IOException
 	 */
@@ -106,25 +108,28 @@ public class LCTest {
 	 * 
 	 * @param reader
 	 * @return
+	 * @throws IOException
 	 */
-	List<String> readAll(BufferedReader reader) {
-		List<String> lines = new ArrayList<String>();
-		String line;
-		try {
-			while (reader.ready())
-				lines.add(reader.readLine());
-		} catch (IOException e) {
-			e.printStackTrace();
+	List<String> readAll(BufferedReader reader) throws IOException {
+		List<String> lines = new ArrayList<>();
+		CharBuffer buf = CharBuffer.allocate(2000);
+		int read = reader.read(buf);
+		if (read > 0) {
+			lines.addAll(Arrays.asList(buf.flip().toString().split(System.lineSeparator())));
+			if (!lines.isEmpty() && lines.get(lines.size() - 1).isEmpty())
+				lines.remove(lines.size() - 1);
 		}
 		return lines;
+		// return reader.rea lines().collect(Collectors.toList());
 	}
 
 	/**
 	 * Prints all data from specified reader to stdout.
 	 * 
 	 * @param reader
+	 * @throws IOException
 	 */
-	void printAll(BufferedReader reader) {
+	void printAll(BufferedReader reader) throws IOException {
 		for (String line : readAll(reader)) {
 			System.out.println(line);
 		}
@@ -212,7 +217,7 @@ public class LCTest {
 	 * Test specified outputs from a LuckyCard game.
 	 * 
 	 * @param lines     the output as a list of strings.
-	 * @param firstGame 
+	 * @param firstGame
 	 * @return number of warnings.
 	 */
 	int testOutput(List<String> lines, boolean firstGame) {
@@ -259,10 +264,11 @@ public class LCTest {
 
 	/**
 	 * Test the win/lose message
+	 * 
 	 * @param lines output lines from the application
-	 * @param i index of current line to look for win message
+	 * @param i     index of current line to look for win message
 	 * @param cards the three cards drawn
-	 * @return number of warnings. 
+	 * @return number of warnings.
 	 */
 	int testWinMessage(List<String> lines, int i, int... cards) {
 		i += skipEmpty(lines, i);
@@ -366,7 +372,7 @@ public class LCTest {
 	/**
 	 * Verifies that the specified string s match the output for a card.
 	 * 
-	 * @param s String to test
+	 * @param s         String to test
 	 * @param cardIndex is the card index in the LuckyCard game (1, 2, or 3).
 	 * @return specified card value.
 	 * @throws TestException
@@ -377,7 +383,7 @@ public class LCTest {
 		}
 		String[] parts = s.split(":|->|\\?|→|=");
 		if (parts.length == 4) {
-			int value = cardValue(parts[1]);
+			int value = cardValueWithBonus(parts[1]);
 			int specifiedValue = Integer.parseInt(parts[3].trim());
 			if (value != specifiedValue) {
 				throw new TestException(
@@ -390,20 +396,35 @@ public class LCTest {
 	}
 
 	/**
-	 * Calculates card value.
+	 * Calculates card value, including bonus.
 	 * 
 	 * @param s String to parse
 	 * @return the total value for a card, including bonus.
 	 */
-	int cardValue(String s) {
+	int cardValueWithBonus(String s) {
 		s = s.trim();
 		int v = s.contains("Diamonds") ? 4
 				: s.contains("Clubs") ? 6 : s.contains("Hearts") ? 8 : s.contains("Spades") ? 10 : 0;
 		String[] parts = s.split(" ");
 		if (parts.length > 1) {
-			v += Integer.parseInt(parts[1]);
+			v += cardValue(parts[1]);
 		}
 		return v;
+	}
+
+	int cardValue(String v) {
+		switch (v) {
+		case "A":
+			return 1;
+		case "K":
+			return 13;
+		case "Q":
+			return 12;
+		case "J":
+			return 11;
+		default:
+			return Integer.parseInt(v);
+		}
 	}
 
 	int skipEmpty(List<String> lines, int startIndex) {
