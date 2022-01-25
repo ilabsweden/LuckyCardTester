@@ -4,13 +4,16 @@
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,9 +30,13 @@ import java.util.stream.Stream;
  *
  */
 public class LCTest {
+	String MAIN_SRC = "src/Game.java";
 
 	Runtime runtime = Runtime.getRuntime();
 	private String projectPath;
+	private static String encoding = "Windows-1252";
+
+	private static final String sep = System.getProperty("file.separator");
 
 	/**
 	 * Instantiates a test for a single project.
@@ -41,12 +48,13 @@ public class LCTest {
 	}
 
 	public static void main(String[] args) {
-		if (args.length < 1) {
+		String path = parseArgs(args);
+		if (path == null) {
 			System.out.println(
-					"LCTest is a test utility for the LuckyCard assignment (IT401G).\n\n\tUsage: java LCTest.java <path to your project folder. Use '.' to indicate the current folder>");
+					"LCTest is a test utility for the LuckyCard assignment (IT401G).\n\nUsage:\n\tjava LCTest.java <path to your project folder. Use '.' to indicate the current folder>\n\tjava LCTest.java -encoding UTF-8 <path> //for code written on OSX/Linux");
 			return;
 		}
-		String path = args[0];
+		
 		LCTest t = new LCTest(path);
 
 		try {
@@ -55,6 +63,22 @@ public class LCTest {
 			System.out.println("Test failed with error: ");
 			e.printStackTrace();
 		}
+	}
+
+	private static String parseArgs(String[] args) {
+		String path = null;
+		for (int i = 0; i < args.length; i++) {
+			switch (args[i]) {
+			case "-help":
+				return null;
+			case "-encoding":
+				encoding = i + 1 < args.length ? args[i + 1] : encoding;
+				i++;
+			default:
+				path = args[i];
+			}
+		}
+		return path;
 	}
 
 	/**
@@ -301,7 +325,7 @@ public class LCTest {
 	int testCompile() throws InterruptedException, IOException, TestException {
 		System.out.print("Compiling application... ");
 
-		Process p = exec("javac", "-d", "bin", "-sourcepath", "src", "src/Game.java");
+		Process p = exec("javac", "-encoding", encoding, "-d", "bin", "-sourcepath", "src", MAIN_SRC);
 		p.waitFor();
 		List<String> errors = readAll(stderr(p));
 		if (errors.isEmpty()) {
