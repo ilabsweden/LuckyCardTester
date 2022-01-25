@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 
 /**
  * Application tester for the LuckyCard assignment (IT401G, University of
- * Skövde).
+ * Skovde).
  * 
  * @author Erik Billing
  *
