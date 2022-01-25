@@ -301,7 +301,7 @@ public class LCTest {
 	int testCompile() throws InterruptedException, IOException, TestException {
 		System.out.print("Compiling application... ");
 
-		Process p = exec("javac", "-encoding", "UTF-8", "-d", "bin", "-sourcepath", "src", "src/Game.java");
+		Process p = exec("javac", "-d", "bin", "-sourcepath", "src", "src/Game.java");
 		p.waitFor();
 		List<String> errors = readAll(stderr(p));
 		if (errors.isEmpty()) {
