@@ -359,6 +359,12 @@ public class LCTest {
 			System.out.println("OK");
 			return 0;
 		} else {
+if(!new File(projectPath + "/src/Game.java").exists())
+System.out.println("Game.java is missing");
+if(!new File(projectPath + "/src/Card.java").exists())
+System.out.println("Card.java is missing");
+if(!new File(projectPath + "/src/Deck.java").exists())
+System.out.println("Deck.java is missing");
 			System.out.println(
 					"Warning! \nYour application should consist of three java files located in the src folder of your project: Card.java, Deck.java, Game.java. Some of these files could not be found!");
 			return 1;
