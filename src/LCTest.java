@@ -213,7 +213,7 @@ public class LCTest {
 	int testRun(int gameCount) throws IOException, InterruptedException, TestException {
 		System.out.println("Running application... ");
 		int warnings = 0;
-		Process p = exec("java", "-cp", "bin", "Game");
+		Process p = exec("java", "-cp", "bin", "Main");
 
 		for (int i = 1; i <= gameCount; i++) {
 			if (p.waitFor(500, TimeUnit.MILLISECONDS)) {
