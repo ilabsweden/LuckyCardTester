@@ -25,13 +25,11 @@ import java.util.stream.Stream;
  *
  */
 public class LCTest {
-	String MAIN_SRC = "src/Game.java";
+	String MAIN_SRC = "src/Main.java";
 
 	Runtime runtime = Runtime.getRuntime();
 	private String projectPath;
 	private static String encoding = "Windows-1252";
-
-	private static final String sep = System.getProperty("file.separator");
 
 	/**
 	 * Instantiates a test for a single project.
@@ -353,24 +351,31 @@ public class LCTest {
 	 * @return number of warnings.
 	 */
 	int testSrc() {
-		System.out.print("Testing source... ");
-		if (new File(projectPath + "/src/Game.java").exists() && new File(projectPath + "/src/Deck.java").exists()
-				&& new File(projectPath + "/src/Card.java").exists()) {
-			System.out.println("OK");
-			return 0;
-		} else {
-if(!new File(projectPath + "/src/Game.java").exists())
-System.out.println("Game.java is missing");
-if(!new File(projectPath + "/src/Card.java").exists())
-System.out.println("Card.java is missing");
-if(!new File(projectPath + "/src/Deck.java").exists())
-System.out.println("Deck.java is missing");
-			System.out.println(
-					"Warning! \nYour application should consist of three java files located in the src folder of your project: Card.java, Deck.java, Game.java. Some of these files could not be found!");
-			return 1;
+	    String[] classNames = {"Card", "Deck", "Game", "Main" };
+	    List<String> missingFiles = new ArrayList<>();
+	    System.out.println("Testing source... ");
+	    for (String className : classNames) {
+		if (new File(projectPath + "/src/"+ className +".java").exists()) {
+			System.out.println("\tFound: " + className + ".java");
 		}
+		else {
+		    missingFiles.add(className);
+		}
+	    }
+	    if (missingFiles.isEmpty()) {
+		System.out.println("OK");
+	    }
+	    else {
+		System.out.println("Warning! \nYour application should consist of four Java files located in the src folder of your project: Card.java, Deck.java, Game.java and Main.java.\nCould not find:");
+		for (String name: missingFiles) {
+		    System.out.println("\t" +  name + ".java");
+		}
+	    }
+	    return missingFiles.size();
 	}
 
+    
+    
 	/**
 	 * Runs all tests.
 	 * 
